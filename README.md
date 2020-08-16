@@ -1,0 +1,2 @@
+# gvd
+Golang vim dictionary
