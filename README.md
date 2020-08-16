@@ -61,3 +61,82 @@ strings.Replace
 ```
 
 Get from Vim dictionary: "i_CTRL+X_CTRL+K"
+
+https://stackoverflow.com/questions/28166249/how-to-list-installed-go-packages
+
+```Go
+
+import (
+    "fmt"
+
+    "golang.org/x/tools/go/packages"
+)
+
+func main() {
+    pkgs, err := packages.Load(nil, "std")
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println(pkgs)
+    // Output: [archive/tar archive/zip bufio bytes compress/bzip2 ... ]
+}
+```
+
+```Go
+package main
+
+import (
+    "fmt"
+
+    "golang.org/x/tools/go/packages"
+)
+
+var standardPackages = make(map[string]struct{})
+
+func init() {
+    pkgs, err := packages.Load(nil, "std")
+    if err != nil {
+        panic(err)
+    }
+
+    for _, p := range pkgs {
+        standardPackages[p.PkgPath] = struct{}{}
+    }
+}
+
+func isStandardPackage(pkg string) bool {
+    _, ok := standardPackages[pkg]
+    return ok
+}
+
+func main() {
+    fmt.Println(isStandardPackage("fmt"))  // true
+    fmt.Println(isStandardPackage("nope")) // false
+}
+```
+
+```
+cmd := exec.Command("go", "list", "std")
+p, err := cmd.Output()
+if err != nil {
+    // handle error
+}
+stdPkgs = strings.Fields(string(p))
+```
+```
+$ go list std
+
+archive/tar
+archive/zip
+bufio
+bytes
+compress/bzip2
+compress/flate
+compress/gzip
+compress/lzw
+compress/zlib
+container/heap
+container/list
+container/ring
+```
