@@ -59,3 +59,5 @@ strings.Index
 strings.Replace
 ...
 ```
+
+Get from Vim dictionary: "i_CTRL+X_CTRL+K"
