@@ -53,3 +53,9 @@ func Cbrt(x float64) float64
 ...
 ```
 
+Example of Vim dictionary:
+```
+strings.Index
+strings.Replace
+...
+```
