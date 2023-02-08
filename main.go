@@ -25,7 +25,7 @@ func main() {
 
 	words, err := Get(*pkgs)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return
 	}
 	sort.Strings(words)
@@ -39,16 +39,17 @@ func Get(pkg string) (words []string, err error) {
 	if err != nil {
 		return
 	}
-	pkgs := strings.Fields(string(data))
-
-	for _, pkg := range pkgs {
+	list := strings.ReplaceAll(string(data), "\r", "")
+	for _, pkg := range strings.Split(list, "\n") {
+		pkg = strings.TrimSpace(pkg)
 		if pkg == "" {
 			continue
 		}
 		var ws []string
 		ws, err = Words(pkg)
 		if err != nil {
-			return
+			err = nil // ignore error
+			continue
 		}
 		words = append(words, ws...)
 	}
@@ -56,6 +57,11 @@ func Get(pkg string) (words []string, err error) {
 }
 
 func Words(pkg string) (words []string, err error) {
+	defer func() {
+		if err != nil {
+			err = fmt.Errorf("Words for `%s`: %v", pkg, err)
+		}
+	}()
 	data, err := exec.Command("go", "doc", "-short", pkg).Output()
 	if err != nil {
 		return

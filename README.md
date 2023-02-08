@@ -15,3 +15,7 @@ Create a dictionary by running:
 ```
 $ go run main.go > $HOME/gostd.dict
 ```
+
+```
+go run main.go > ~/dotfiles/gostd.txt
+```
